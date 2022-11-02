@@ -1,6 +1,9 @@
 CREATE DATABASE [valmir]
 
-CREATE TABLE [Studant](
+USE [valmir]
+GO
+
+CREATE TABLE [Student](
     [Id] UNIQUEIDENTIFIER NOT NULL,
     [Name] NVARCHAR(120) NOT NULL,
     [Email] NVARCHAR(180) NOT NULL,
@@ -76,5 +79,31 @@ CREATE TABLE [Course]
 );
 GO
 
+CREATE TABLE [CareerItem]
+(
+    [CareerId] UNIQUEIDENTIFIER NOT NULL,
+    [CourseId] UNIQUEIDENTIFIER NOT NULL,
+    [Title] NVARCHAR(160) NOT NULL,
+    [Description] TEXT NOT NULL,
+    [Order] TINYINT NOT NULL,
+    CONSTRAINT [PK_CareerItem] PRIMARY KEY ([CourseId], [CareerId]),
+    CONSTRAINT [FK_CareerItem_Career_CareerId] FOREIGN KEY ([CareerId]) REFERENCES [Career] ([Id]),
+    CONSTRAINT [FJ_CareerItem_Course_CourseId] FOREIGN KEY ([CourseId]) REFERENCES [Course] ([Id]),
+);
+GO
+
+CREATE TABLE [StudentCourse]
+(
+    [CourseId] UNIQUEIDENTIFIER NOT NULL,
+    [StudentId] UNIQUEIDENTIFIER NOT NULL,
+    [Progress] TINYINT NOT NULL,
+    [Favorite] BIT NOT NULL,
+    [StartDate] DATETIME NOT NULL,
+    [LastUpdate] DATETIME NOT NULL DEFAULT(GETDATE()),
+    CONSTRAINT [PK_StudentCourse] PRIMARY KEY ([CourseId], [StudentId]),
+    CONSTRAINT [FK_StudentCourse_Course_CourseId] FOREIGN KEY ([CourseId]) REFERENCES [Course] ([Id]),
+    CONSTRAINT [FK_StudentCourse_Course_StudentId] FOREIGN KEY ([StudentId]) REFERENCES [Student] ([Id]),
+);
+GO
 
 
